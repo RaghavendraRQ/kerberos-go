@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/ecdh"
 	"crypto/rand"
+	"crypto/sha256"
 	"encoding/binary"
 	"encoding/json"
 	"log"
@@ -79,19 +81,18 @@ func unPadData(data []byte) []byte {
 
 func ReadData(conn net.Conn) []byte {
 	var size = make([]byte, 4)
-
-	conn.Read(size)
-
+	if _, err := conn.Read(size); err != nil {
+		return nil
+	}
 	var data = make([]byte, int(binary.BigEndian.Uint32(size)))
-
-	conn.Read(data)
-
+	if _, err := conn.Read(data); err != nil {
+		return nil
+	}
 	return data
 
 }
 
 func WriteData(conn net.Conn, data []byte) {
-
 	buf := make([]byte, 4)
 	size := len(data)
 	binary.BigEndian.PutUint32(buf, uint32(size))
@@ -119,4 +120,39 @@ func Decode[Ticket TicketGrantingTicket | ServiceTicket](data []byte) Ticket {
 		log.Fatalf("Error unmarshalling data: %v", err)
 	}
 	return tgt
+}
+
+func GenerateKeyPair() (*ecdh.PublicKey, *ecdh.PrivateKey) {
+	curve := ecdh.P256()
+	privateKey, err := curve.GenerateKey(rand.Reader)
+	if err != nil {
+		log.Println("Can't generate private key", err)
+		return nil, nil
+	}
+	return privateKey.PublicKey(), privateKey
+}
+
+func GetKeyFromBytes(key_bytes []byte) *ecdh.PublicKey {
+	curve := ecdh.P256()
+
+	publicKey, err := curve.NewPublicKey(key_bytes)
+
+	if err != nil {
+		log.Println("can't derive pubkey from bytes", err)
+		return nil
+	}
+
+	return publicKey
+}
+
+func GenerateSharedKey(pubilcKey *ecdh.PublicKey, privateKey *ecdh.PrivateKey) []byte {
+	sharedSecret, err := privateKey.ECDH(pubilcKey)
+	if err != nil {
+		log.Println("Error in generating shared secret")
+		return nil
+	}
+
+	sharedKey := sha256.Sum256(sharedSecret)
+
+	return sharedKey[:]
 }

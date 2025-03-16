@@ -7,6 +7,10 @@ import (
 	"net"
 )
 
+var (
+	sharedKey []byte
+)
+
 func main() {
 
 	fmt.Println("Client is running.")
@@ -47,6 +51,9 @@ func requestTGT(username, password string) []byte {
 	}
 	defer conn.Close()
 
+	exchageKey(conn)
+
+	fmt.Printf("Shared Key: %x\n", sharedKey)
 	kerberos.WriteData(conn, []byte(username))
 	kerberos.WriteData(conn, []byte(password))
 
@@ -101,4 +108,17 @@ func checkService(st []byte) {
 		return
 	}
 
+}
+
+func exchageKey(conn net.Conn) error {
+	publicKey_c, privateKey_c := kerberos.GenerateKeyPair()
+
+	publicKey_s_bytes := kerberos.ReadData(conn)
+
+	publicKey_s := kerberos.GetKeyFromBytes(publicKey_s_bytes)
+
+	kerberos.WriteData(conn, publicKey_c.Bytes())
+	sharedKey = kerberos.GenerateSharedKey(publicKey_s, privateKey_c)
+
+	return nil
 }

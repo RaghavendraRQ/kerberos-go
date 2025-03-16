@@ -9,4 +9,6 @@ var (
 		"kerberos":  "Password",
 		"kerberos1": "Password1",
 	}
+
+	sharedKey []byte
 )

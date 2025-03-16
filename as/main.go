@@ -30,6 +30,9 @@ func main() {
 func handleConnection(conn net.Conn) {
 	defer conn.Close()
 
+	exchageKey(conn) // Stroring the key directly on the sharedKey
+
+	fmt.Printf("Shared Key: %x\n", sharedKey)
 	username := string(kerberos.ReadData(conn))
 	password := string(kerberos.ReadData(conn))
 
@@ -60,5 +63,19 @@ func handleConnection(conn net.Conn) {
 func authenticateUser(username, password string) bool {
 
 	return users[username] == password
+
+}
+
+func exchageKey(conn net.Conn) error {
+	publicKey_s, privateKey_s := kerberos.GenerateKeyPair()
+
+	kerberos.WriteData(conn, publicKey_s.Bytes())
+
+	publicKey_c_bytes := kerberos.ReadData(conn)
+
+	publickey_c := kerberos.GetKeyFromBytes(publicKey_c_bytes)
+
+	sharedKey = kerberos.GenerateSharedKey(publickey_c, privateKey_s)
+	return nil
 
 }
