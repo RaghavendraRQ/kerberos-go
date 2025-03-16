@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	kerberos "kerberos/common"
 	"log"
 	"net"
-	kerberos "renumadam/common"
 )
 
 var (
