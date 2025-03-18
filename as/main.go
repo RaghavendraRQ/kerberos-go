@@ -33,8 +33,8 @@ func handleConnection(conn net.Conn) {
 	exchageKey(conn) // Stroring the key directly on the sharedKey
 
 	fmt.Printf("Shared Key: %x\n", sharedKey)
-	username := string(kerberos.ReadData(conn))
-	password := string(kerberos.ReadData(conn))
+	username := string(kerberos.Decrypt(sharedKey, kerberos.ReadData(conn)))
+	password := string(kerberos.Decrypt(sharedKey, kerberos.ReadData(conn)))
 
 	// TODO: Authenicate the user
 	fmt.Println("Username: ", string(username))

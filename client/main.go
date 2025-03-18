@@ -54,8 +54,8 @@ func requestTGT(username, password string) []byte {
 	exchageKey(conn)
 
 	fmt.Printf("Shared Key: %x\n", sharedKey)
-	kerberos.WriteData(conn, []byte(username))
-	kerberos.WriteData(conn, []byte(password))
+	kerberos.WriteData(conn, kerberos.Encrypt(sharedKey, []byte(username)))
+	kerberos.WriteData(conn, kerberos.Encrypt(sharedKey, []byte(password)))
 
 	code := kerberos.ReadData(conn)
 

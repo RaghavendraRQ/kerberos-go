@@ -8,17 +8,17 @@ import (
 )
 
 const (
-	AS_AUTH_ERR = 0
-	AS_AUTH_OK  = 1
+	AS_AUTH_ERR = iota
+	AS_AUTH_OK
 
-	TGT_EXPIRED_ERR = 2
-	TGT_OK          = 3
+	TGT_EXPIRED_ERR
+	TGT_OK
 
-	TGS_EXPIRED_ERR = 4
-	TGS_OK          = 5
+	TGS_EXPIRED_ERR
+	TGS_OK
 
-	SERVICE_ERR = 6
-	SERVICE_OK  = 7
+	SERVICE_ERR
+	SERVICE_OK
 )
 
 var (
