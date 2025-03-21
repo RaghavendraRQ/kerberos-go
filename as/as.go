@@ -1,4 +1,4 @@
-package main
+package as
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 	"strconv"
 )
 
-func main() {
+func Main() {
 	listener, err := net.Listen("tcp", kerberos.AS_PORT)
 
 	if err != nil {
@@ -39,7 +39,7 @@ func handleConnection(conn net.Conn) {
 	// TODO: Authenicate the user
 	fmt.Println("Username: ", string(username))
 
-	if !authenticateUser(username, password) {
+	if !AuthenticateUser(username, password) {
 		log.Printf("Authentication failed for user: %s", username)
 		kerberos.WriteData(conn, []byte{kerberos.AS_AUTH_ERR})
 		return
@@ -60,7 +60,7 @@ func handleConnection(conn net.Conn) {
 	fmt.Println("TGT issued to: ", clientId)
 }
 
-func authenticateUser(username, password string) bool {
+func AuthenticateUser(username, password string) bool {
 
 	return users[username] == password
 
