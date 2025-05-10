@@ -14,15 +14,14 @@ func Main() {
 	if err != nil {
 		log.Fatalln("AS can't start: ", err)
 	}
-	fmt.Println("Authentication Server (AS) is running on port 8000")
+	log.Println("Authentication Server (AS) is running on port 8000")
 
 	for {
 		conn, err := listener.Accept()
 		if err != nil {
 			log.Fatalln("AS can't connect: ", err)
 		}
-
-		fmt.Println("Connection From: ", conn.RemoteAddr())
+		log.Println("Connection From: ", conn.RemoteAddr())
 		go handleConnection(conn)
 	}
 }
