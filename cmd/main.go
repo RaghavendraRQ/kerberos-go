@@ -1,7 +1,7 @@
 package main
 
 import (
-	"kerberos/as"
+	"kerberos/pkg/as"
 	"sync"
 )
 
@@ -12,7 +12,7 @@ func main() {
 	go func() {
 		defer wg.Done()
 
-		as.Main()
+		as.Run()
 
 	}()
 

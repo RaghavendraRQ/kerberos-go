@@ -2,13 +2,13 @@ package as
 
 import (
 	"fmt"
-	kerberos "kerberos/common"
+	kerberos "kerberos/internal"
 	"log"
 	"net"
 	"strconv"
 )
 
-func Main() {
+func Run() {
 	listener, err := net.Listen("tcp", kerberos.AS_PORT)
 
 	if err != nil {

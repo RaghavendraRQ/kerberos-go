@@ -1,7 +1,7 @@
 package tests
 
 import (
-	"kerberos/as"
+	"kerberos/pkg/as"
 	"testing"
 )
 
