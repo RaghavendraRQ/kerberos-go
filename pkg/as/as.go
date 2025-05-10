@@ -8,10 +8,10 @@ import (
 	"strconv"
 )
 
-func Run() {
+func Run() error {
 	listener, err := net.Listen("tcp", kerberos.AS_PORT)
 	if err != nil {
-		log.Fatalln("AS can't start: ", err)
+		return fmt.Errorf("as can't start: %v", err)
 	}
 	log.Println("Authentication Server (AS) is running on port 8000")
 
