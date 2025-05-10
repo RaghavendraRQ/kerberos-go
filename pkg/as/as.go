@@ -10,7 +10,6 @@ import (
 
 func Run() {
 	listener, err := net.Listen("tcp", kerberos.AS_PORT)
-
 	if err != nil {
 		log.Fatalln("AS can't start: ", err)
 	}

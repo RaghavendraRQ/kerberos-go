@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"fmt"
 	"log"
+	"net"
 	"time"
 )
 
@@ -31,6 +32,8 @@ var (
 
 type TicketGrantingTicket struct {
 	ClientId   string
+	TGSId      string
+	ClientAdc  net.IPAddr
 	TimeStamp  time.Time
 	Lifetime   time.Time
 	SessionKey []byte
@@ -38,10 +41,17 @@ type TicketGrantingTicket struct {
 
 type ServiceTicket struct {
 	ClientId   string
+	ClientAdc  net.IPAddr
 	ServiceId  string
 	TimeStamp  time.Time
 	Lifetime   time.Time
 	SessionKey []byte
+}
+
+type Authenticator struct {
+	ClientId  string
+	ClientAdc net.IPAddr
+	TimeStamp time.Time
 }
 
 func (t TicketGrantingTicket) PrintPretty() {
