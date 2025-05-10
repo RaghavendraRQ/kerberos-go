@@ -1,4 +1,4 @@
-package main
+package tgs
 
 import (
 	"fmt"
@@ -15,20 +15,17 @@ var (
 	}
 )
 
-func main() {
+func Run() error {
 	listner, err := net.Listen("tcp", kerberos.TGS_PORT)
 
 	if err != nil {
-		log.Fatalln("Can't start the TGS: ", err)
+		return fmt.Errorf("can't start the tgs: %v", err)
 	}
-
-	fmt.Println("Ticket Granting Server (TGS) is running on", kerberos.TGS_PORT)
-
+	log.Println("Ticket Granting Server (TGS) is running on", kerberos.TGS_PORT)
 	defer listner.Close()
 
 	for {
 		conn, err := listner.Accept()
-
 		if err != nil {
 			log.Printf("Error accepting connection: %v", err)
 			continue
@@ -44,6 +41,7 @@ func handleConnection(conn net.Conn) {
 	defer conn.Close()
 
 	encTicketGrantingTicket := kerberos.ReadData(conn)
+	// TODO: Check for Authenticator as well
 
 	if encTicketGrantingTicket == nil {
 		log.Println("No data received")
