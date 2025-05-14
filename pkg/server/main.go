@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	kerberos "kerberos/common"
+	kerberos "kerberos/internal"
 	"log"
 	"net"
 )
